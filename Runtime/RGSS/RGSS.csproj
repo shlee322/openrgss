@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BAF28B74-49D8-4162-B662-7473A6D4FB99}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenRGSS.Runtime.RGSS</RootNamespace>
+    <AssemblyName>OpenRGSS.Runtime.RGSS</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\OpenTK.1.1.1589.5941\lib\NET40\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio.cs" />
+    <Compile Include="Bitmap.cs" />
+    <Compile Include="Color.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="Graphics.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="Plane.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="RGSSError.cs" />
+    <Compile Include="RPG\Actor.cs" />
+    <Compile Include="RPG\Animation.cs" />
+    <Compile Include="RPG\Armor.cs" />
+    <Compile Include="RPG\AudioFile.cs" />
+    <Compile Include="RPG\Cache.cs" />
+    <Compile Include="RPG\Class.cs" />
+    <Compile Include="RPG\CommonEvent.cs" />
+    <Compile Include="RPG\Enemy.cs" />
+    <Compile Include="RPG\Event.cs" />
+    <Compile Include="RPG\EventCommand.cs" />
+    <Compile Include="RPG\Item.cs" />
+    <Compile Include="RPG\Map.cs" />
+    <Compile Include="RPG\MapInfo.cs" />
+    <Compile Include="RPG\MoveCommand.cs" />
+    <Compile Include="RPG\MoveRoute.cs" />
+    <Compile Include="RPG\Skill.cs" />
+    <Compile Include="RPG\Sprite.cs" />
+    <Compile Include="RPG\State.cs" />
+    <Compile Include="RPG\System.cs" />
+    <Compile Include="RPG\Tileset.cs" />
+    <Compile Include="RPG\Troop.cs" />
+    <Compile Include="RPG\Weapon.cs" />
+    <Compile Include="RPG\Weather.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="Table.cs" />
+    <Compile Include="Tilemap.cs" />
+    <Compile Include="Tone.cs" />
+    <Compile Include="Viewport.cs" />
+    <Compile Include="Window.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\OpenRGSS\OpenRGSS.csproj">
+      <Project>{1e71c07e-04db-4297-aa7c-444ba3521ff5}</Project>
+      <Name>OpenRGSS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
