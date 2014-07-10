@@ -7,6 +7,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Collections.Generic;
 using Microsoft.Scripting;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenRGSS
 {
@@ -17,6 +18,8 @@ namespace OpenRGSS
         private GameWindow window;
         private Thread gameThread;
         private ScriptEngine rubyEngine;
+
+        private IntroScene introScene;
 
         private const string RubyExtensionSource = @"
             require 'OpenRGSS.Runtime.RGSS'
@@ -60,6 +63,8 @@ namespace OpenRGSS
             this.window.Title = "OpenRGSS";
             this.window.Load += LoadWindow;
             this.gameThread = new Thread(this.EngineThreadMain);
+
+            this.introScene = new IntroScene();
         }
 
         public static Engine GetInstance()
@@ -72,7 +77,7 @@ namespace OpenRGSS
             Engine.instance = engine;
         }
 
-        public void SetInstance()
+        protected void SetInstance()
         {
             Engine.SetInstance(this);
         }
@@ -84,6 +89,8 @@ namespace OpenRGSS
 
         private void LoadWindow(object sender, System.EventArgs e)
         {
+            this.introScene.Log("Init Engine...");
+
             this.window.Context.MakeCurrent(null);
             this.gameThread.Start();
         }
@@ -91,7 +98,6 @@ namespace OpenRGSS
         protected void EngineThreadMain()
         {
             this.window.MakeCurrent();
-
             this.InitEngine();
             this.InitScriptEngine();
             this.InitScripts();
@@ -99,10 +105,15 @@ namespace OpenRGSS
 
         protected void InitEngine()
         {
+            GL.Viewport(0, 0, 640, 480);
+            GL.Ortho(0.0, 640, 480, 0, 1, -1);
+            GL.Enable(EnableCap.Texture2D);
         }
 
         protected void InitScriptEngine()
         {
+            this.introScene.Log("Init Script Engine...");
+
             ScriptRuntime runtime = Ruby.CreateRuntime();
             this.rubyEngine = runtime.GetEngine("rb");
 
@@ -111,6 +122,7 @@ namespace OpenRGSS
 
         protected void InitScripts()
         {
+            this.introScene.Log("Init Scripts...");
             this.LoadScript("RubyExtensionSource", Engine.RubyExtensionSource);
             this.LoadScript("Scripts Loader", Engine.ScriptLoaderSource);
         }
@@ -121,6 +133,7 @@ namespace OpenRGSS
 
             try
             {
+                this.introScene.Log("Load Script (" + name + ")...");
                 source.Execute();
             }
             catch (Exception e)
