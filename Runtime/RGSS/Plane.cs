@@ -39,5 +39,9 @@
         {
             return false;
         }
+
+        public void Draw()
+        {
+        }
     }
 }
