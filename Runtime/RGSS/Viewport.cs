@@ -69,5 +69,10 @@ namespace OpenRGSS.Runtime.RGSS
         {
             this.entityList.Remove(entity);
         }
+
+        public int GetDisplayZ(int entiyZ)
+        {
+            return this.z * 1000 + entiyZ;
+        }
     }
 }

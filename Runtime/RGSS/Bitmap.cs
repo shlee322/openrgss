@@ -1,6 +1,7 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using OpenTK.Graphics.OpenGL;
+
 namespace OpenRGSS.Runtime.RGSS
 {
     public class Bitmap
@@ -170,8 +171,22 @@ namespace OpenRGSS.Runtime.RGSS
             this.draw_text(rect.x, rect.y, rect.width, rect.height, str, align);
         }
 
-        public void text_size(string str)
+        public Rect text_size(string str)
         {
+            FontStyle style = FontStyle.Regular;
+            if (this.font.bold) style |= FontStyle.Bold;
+            if (this.font.italic) style |= FontStyle.Italic;
+            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style);
+
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                SizeF size = g.MeasureString(str, font);
+                return new Rect(0, 0, (int)size.Width, (int)size.Height);
+            }
         }
     }
 }

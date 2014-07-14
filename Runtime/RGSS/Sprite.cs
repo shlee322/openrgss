@@ -91,10 +91,10 @@ namespace OpenRGSS.Runtime.RGSS
             int dx = this.x - this.ox;
             int dy = this.y - this.oy;
 
-            GL.TexCoord2(src_x, src_y); GL.Vertex3(dx, dy, this.z);
-            GL.TexCoord2(src_x, src_h); GL.Vertex3(dx, dy + this.src_rect.height, this.z);
-            GL.TexCoord2(src_w, src_h); GL.Vertex3(dx + this.src_rect.width, dy + this.src_rect.height, this.z);
-            GL.TexCoord2(src_w, src_y); GL.Vertex3(dx + this.src_rect.width, dy, this.z);
+            GL.TexCoord2(src_x, src_y); GL.Vertex3(dx, dy, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(src_x, src_h); GL.Vertex3(dx, dy + this.src_rect.height, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(src_w, src_h); GL.Vertex3(dx + this.src_rect.width, dy + this.src_rect.height, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(src_w, src_y); GL.Vertex3(dx + this.src_rect.width, dy, this.viewport.GetDisplayZ(this.z));
             GL.End();
         }
     }
