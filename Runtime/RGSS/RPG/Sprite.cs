@@ -2,6 +2,13 @@
 {
     public class Sprite : RGSS.Sprite
     {
+        public Sprite() : this(null)
+        {
+        }
+
+        public Sprite(Viewport viewport = null) : base(viewport)
+        {
+        }
     }
 }
 /*

@@ -47,5 +47,10 @@ namespace OpenRGSS.Runtime.RGSS
         {
             return null;
         }
+
+        public System.Drawing.Color GetNative()
+        {
+            return System.Drawing.Color.FromArgb((int)this.alpha, (int)this.red, (int)this.green, (int)this.blue);
+        }
     }
 }

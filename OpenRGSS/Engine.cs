@@ -21,14 +21,20 @@ namespace OpenRGSS
 
         private IntroScene introScene;
 
-        private const string RubyExtensionSource = @"
+        private const string RGSSRuntimeSource = @"
             require 'OpenRGSS.Runtime.RGSS'
             include OpenRGSS::Runtime::RGSS
 
             class Input
 	            class << self
+		            def press?(num)
+			            return pressQM(num.getKey())
+		            end
 		            def trigger?(num)
 			            return triggerQM(num.getKey())
+		            end
+		            def repeat?(num)
+			            return repeatQM(num.getKey())
 		            end
 	            end
             end
@@ -44,6 +50,10 @@ namespace OpenRGSS
                   Marshal.dump(obj, f)
                 }
             end
+
+            def print(msg)
+                Engine.Log(msg)
+            end
         ";
         private const string ScriptLoaderSource = @"
             load_assembly 'IronRuby.Libraries', 'IronRuby.StandardLibrary.Zlib'
@@ -55,6 +65,22 @@ namespace OpenRGSS
             end
         ";
 
+        public int Width
+        {
+            get
+            {
+                return this.window.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return this.window.Height;
+            }
+        }
+
         public Engine()
         {
             this.SetInstance();
@@ -62,8 +88,8 @@ namespace OpenRGSS
             this.window = new GameWindow(640, 480);
             this.window.Title = "OpenRGSS";
             this.window.Load += LoadWindow;
-            this.gameThread = new Thread(this.EngineThreadMain);
 
+            this.gameThread = new Thread(this.EngineThreadMain);
             this.introScene = new IntroScene();
         }
 
@@ -105,9 +131,11 @@ namespace OpenRGSS
 
         protected void InitEngine()
         {
-            GL.Viewport(0, 0, 640, 480);
-            GL.Ortho(0.0, 640, 480, 0, 1, -1);
+            GL.Ortho(0.0, Engine.GetInstance().Width, Engine.GetInstance().Height, 0.0, 1000, -1000);
             GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.OneMinusSrcAlpha);
+            GL.ShadeModel(ShadingModel.Smooth);
         }
 
         protected void InitScriptEngine()
@@ -123,7 +151,7 @@ namespace OpenRGSS
         protected void InitScripts()
         {
             this.introScene.Log("Init Scripts...");
-            this.LoadScript("RubyExtensionSource", Engine.RubyExtensionSource);
+            this.LoadScript("RGSS Runtime", Engine.RGSSRuntimeSource);
             this.LoadScript("Scripts Loader", Engine.ScriptLoaderSource);
         }
 
@@ -157,9 +185,38 @@ namespace OpenRGSS
             }
         }
 
+        private long tick = 0;
+        private long count = 0;
+        private long aCount = 0;
+
         public void SwapBuffers()
         {
+            count++;
+            if (System.DateTime.Now.Ticks > tick)
+            {
+                tick = System.DateTime.Now.Ticks + 10000000;
+                aCount = count;
+                count = 0;
+
+                this.window.Title = "OpenRGSS - FPS : " + aCount;
+            }
+
             this.window.SwapBuffers();
+        }
+
+        public GameWindow GetWindow()
+        {
+            return this.window;
+        }
+
+        public void Log(string msg)
+        {
+            OpenRGSS.Log.Debug(msg);
+        }
+
+        public int GetFrameRate()
+        {
+            return 60;
         }
     }
 }

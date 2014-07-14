@@ -19,5 +19,10 @@
             this.width = width;
             this.height = height;
         }
+
+        public void empty()
+        {
+            this.set(0, 0, 0, 0);
+        }
     }
 }

@@ -18,22 +18,26 @@ namespace OpenRGSS.Runtime.RGSS
             this.data = new short[x * y * z];
         }
 
-        /*
-         * 
-  def [](x, y = 0, z = 0)
-     x = [x, @xsize].min
-     y = [y, @ysize].min
-     z = [z, @zsize].min
-     @data[x + y * @xsize + z * @xsize * @ysize]
-  end
-  def []=(*args)
-     x = [args[0], @xsize].min
-     y = [args.size>2 ?args[1] : 0, @ysize].min
-     z = [args.size>3 ?args[2] : 0, @zsize].min
-     v = [args.pop, 256 ** 4].min
-     @data[x + y * @xsize + z * @xsize * @ysize] = v
-  end
-         */
+        public short this[int x, int y=0, int z=0]
+        {
+            get
+            {
+                x = x <= this.xsize ? x : this.xsize;
+                y = y <= this.ysize ? y : this.ysize;
+                z = z <= this.zsize ? z : this.zsize;
+
+                return this.data[x + y * this.xsize + z * this.xsize * this.ysize];
+            }
+
+            set
+            {
+                x = x <= this.xsize ? x : this.xsize;
+                y = y <= this.ysize ? y : this.ysize;
+                z = z <= this.zsize ? z : this.zsize;
+
+                this.data[x + y * this.xsize + z * this.xsize * this.ysize] = value;
+            }
+        }
 
         public static Table _load(byte[] data)
         {
@@ -45,6 +49,7 @@ namespace OpenRGSS.Runtime.RGSS
                     int x = reader.ReadInt32();
                     int y = reader.ReadInt32();
                     int z = reader.ReadInt32();
+                    reader.ReadInt32();
 
                     Table table = new Table(x, y, z);
                     for (int i = 0; i < table.data.Length; i++)

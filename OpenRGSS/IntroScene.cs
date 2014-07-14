@@ -10,6 +10,9 @@ namespace OpenRGSS
 
         public void Log(string msg)
         {
+            GL.Viewport(0, 0, Engine.GetInstance().Width, Engine.GetInstance().Height);
+            //GL.Ortho(0.0, Engine.GetInstance().Width, Engine.GetInstance().Height, 0, 1, -1);
+
             GL.ClearColor(0, 0, 0, 1);
             setMessageTexutre(msg);
 
@@ -21,10 +24,10 @@ namespace OpenRGSS
             GL.Begin(PrimitiveType.Quads);
 
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0, 0);
-            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0, 480);
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(640, 480);
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(640, 0);
-
+            GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0, Engine.GetInstance().Height);
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(Engine.GetInstance().Width, Engine.GetInstance().Height);
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(Engine.GetInstance().Width, 0);
+            
             GL.End();
             GL.PopMatrix();
 
@@ -45,6 +48,11 @@ namespace OpenRGSS
                     g.Clear(Color.Transparent);
                     g.DrawString(msg, new Font("Tahoma", 12, FontStyle.Bold), Brushes.White, new RectangleF(0, 0, 640, 480));
                     g.Flush();
+                }
+
+                if (msgTexture != -1)
+                {
+                    GL.DeleteTexture(msgTexture);
                 }
 
                 msgTexture = GL.GenTexture();

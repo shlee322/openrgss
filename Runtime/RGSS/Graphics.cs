@@ -5,14 +5,26 @@ namespace OpenRGSS.Runtime.RGSS
 {
     public class Graphics
     {
-        public static int frame_rate;
+        public static int frame_rate
+        {
+            get
+            {
+                return Engine.GetInstance().GetFrameRate();
+            }
+        }
         public static int frame_count;
 
-        private static IList<Viewport> viewportList;
-
+        private static IList<Viewport> viewportList = new List<Viewport>();
+        
         public static void update()
         {
-            GL.ClearColor(0, 0, 0, 1);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(0, 0 , 0, 1);
+
+            foreach(Viewport viewport in viewportList) {
+                viewport.draw();
+            }
+
             Engine.GetInstance().SwapBuffers();
         }
 
@@ -26,6 +38,11 @@ namespace OpenRGSS.Runtime.RGSS
 
         public static void frame_reset()
         {
+        }
+
+        public static void addViewport(Viewport viewport)
+        {
+            viewportList.Add(viewport);
         }
     }
 }
