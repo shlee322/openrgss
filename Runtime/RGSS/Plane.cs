@@ -2,7 +2,11 @@
 {
     public class Plane : Entity
     {
-        public Viewport viewport;
+        private Viewport _viewport;
+        public Viewport viewport
+        {
+            get { return _viewport; }
+        }
         public Bitmap bitmap;
         public bool visible;
         public int z;
@@ -21,7 +25,7 @@
             {
                 viewport = new Viewport();
             }
-            this.viewport = viewport;
+            this._viewport = viewport;
             this.viewport.AddEntity(this);
         }
 
