@@ -1,6 +1,6 @@
 ﻿namespace OpenRGSS.Runtime.RGSS
 {
-    public class Plane
+    public class Plane : Entity
     {
         public Viewport viewport;
         public Bitmap bitmap;
@@ -21,11 +21,14 @@
             {
                 viewport = new Viewport();
             }
-            this._viewport = viewport;
+            this.viewport = viewport;
+            this.viewport.AddEntity(this);
         }
 
         public void dispose()
         {
+            if(this.bitmap != null) this.bitmap.dispose();
+            this.viewport.RemoveEntity(this);
         }
 
         public bool disposedQM()
