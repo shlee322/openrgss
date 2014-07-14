@@ -17,6 +17,11 @@
 
         public Plane(Viewport viewport = null)
         {
+            if (viewport == null)
+            {
+                viewport = new Viewport();
+            }
+            this._viewport = viewport;
         }
 
         public void dispose()
