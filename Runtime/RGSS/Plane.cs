@@ -8,7 +8,7 @@
             get { return _viewport; }
         }
         public Bitmap bitmap;
-        public bool visible;
+        public bool visible = true;
         public int z;
         public int ox;
         public int oy;
@@ -57,6 +57,7 @@
 
         public void Draw()
         {
+            if (!this.visible) return;
         }
     }
 }

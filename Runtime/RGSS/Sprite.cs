@@ -24,7 +24,7 @@ namespace OpenRGSS.Runtime.RGSS
         }
 
         public Rect src_rect = new Rect(0, 0, 640, 480);
-        public bool visible;
+        public bool visible = true;
         public int _x;
         public virtual int x
         {
@@ -118,6 +118,7 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void Draw()
         {
+            if (!this.visible) return;
             if (this.bitmap == null) return;
             GL.BindTexture(TextureTarget.Texture2D, this.bitmap.TextureId);
             GL.Begin(PrimitiveType.Quads);

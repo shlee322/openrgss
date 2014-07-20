@@ -131,7 +131,7 @@ namespace OpenRGSS
 
         protected void InitEngine()
         {
-            GL.Ortho(0.0, Engine.GetInstance().Width, Engine.GetInstance().Height, 0.0, 1000, -1000);
+            GL.Ortho(0.0, Engine.GetInstance().Width, Engine.GetInstance().Height, 0.0, 100000, -100000);
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.OneMinusSrcAlpha);

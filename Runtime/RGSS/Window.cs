@@ -95,7 +95,7 @@ namespace OpenRGSS.Runtime.RGSS
         public void dispose()
         {
             this.windowskin.dispose();
-            this.contents.dispose();
+            if(this.contents != null) this.contents.dispose();
             this.viewport.RemoveEntity(this);
             this.disposed = true;
         }
@@ -107,12 +107,12 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void update()
         {
-            //stem.Console.WriteLine("Window Update");
         }
 
         public void Draw()
         {
-            
+            if (!this.visible || this.disposedQM()) return;
+
             GL.BindTexture(TextureTarget.Texture2D, this.windowskin.TextureId);
             GL.Begin(PrimitiveType.Quads);
 
@@ -148,6 +148,8 @@ namespace OpenRGSS.Runtime.RGSS
             GL.TexCoord2(2 / 3f + 1 / 6f, 0.5f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
             //*/
             GL.End();
+
+            if (this.contents == null) return;
 
             GL.BindTexture(TextureTarget.Texture2D, this.contents.TextureId);
             GL.Begin(PrimitiveType.Quads);

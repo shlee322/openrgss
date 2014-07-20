@@ -13,7 +13,7 @@ namespace OpenRGSS.Runtime.RGSS
         public Table map_data;
         public Table flash_data;
         public Table priorities;
-        public bool visible;
+        public bool visible = true;
         public int ox;
         public int oy;
 
@@ -46,6 +46,8 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void Draw()
         {
+            if (!this.visible) return;
+
             GL.BindTexture(TextureTarget.Texture2D, this.tileset.TextureId);
             GL.Begin(PrimitiveType.Quads);
 

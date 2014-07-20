@@ -31,7 +31,6 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void dispose()
         {
-            System.Console.WriteLine("Viewoprt Dispose");
         }
 
         public bool disposedQM()
