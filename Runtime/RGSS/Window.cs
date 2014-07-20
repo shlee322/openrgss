@@ -15,7 +15,7 @@ namespace OpenRGSS.Runtime.RGSS
         public Bitmap windowskin;
         public Bitmap contents = new Bitmap(32, 32);
         public bool stretch;
-        public Rect cursor_rect = new Rect(0, 0, Engine.GetInstance().Width, Engine.GetInstance().Height);
+        public Rect cursor_rect = new Rect(0, 0, 0, 0);
         public bool active = true;
         public bool visible = true;
         public bool pause;
@@ -75,6 +75,8 @@ namespace OpenRGSS.Runtime.RGSS
         }
 
         private bool disposed;
+        private bool cursor_fade = true;
+        private int cursor_opacity = 255;
         
         public Window() : this(null)
         {
@@ -107,6 +109,22 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void update()
         {
+            if(this.cursor_fade)
+            {
+                this.cursor_opacity -= 10;
+                if (this.cursor_opacity <= 100)
+                {
+                    this.cursor_fade = false;
+                }
+            }
+            else
+            {
+                this.cursor_opacity += 10;
+                if (this.cursor_opacity >= 255)
+                {
+                    this.cursor_fade = true;
+                }
+            }
         }
 
         public void Draw()
@@ -117,11 +135,21 @@ namespace OpenRGSS.Runtime.RGSS
 
             GL.Begin(PrimitiveType.Quads);
 
+            GL.Color4(1.0f, 1.0f, 1.0f, (this.opacity / 255.0f) * (this.back_opacity / 255.0f));
+
             //메인 틀
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(this.x + 2, this.y + 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(this.x + 2, this.y + this.height - 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(Window.Boundary, 1.0f); GL.Vertex3(this.x + this.width - 2, this.y + this.height - 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(Window.Boundary, 0.0f); GL.Vertex3(this.x + this.width - 2, this.y + 2, this.viewport.GetDisplayZ(this.z));
+            
+            GL.End();
+
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            GL.Begin(PrimitiveType.Quads);
+
+            GL.Color4(1.0f, 1.0f, 1.0f, this.opacity / 255.0f);
 
             //좌측 상단 테두리
             GL.TexCoord2(Window.Boundary, 0.0f); GL.Vertex3(this.x, this.y, this.viewport.GetDisplayZ(this.z));
@@ -173,6 +201,8 @@ namespace OpenRGSS.Runtime.RGSS
 
             if (this.cursor_rect.width > 0 && this.cursor_rect.height > 0)
             {
+                GL.Color4(1.0f, 1.0f, 1.0f, (this.opacity / 255.0f) * (this.cursor_opacity / 255.0f));
+
                 //커서 상단
                 GL.TexCoord2(Window.Boundary, 0.5f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
                 GL.TexCoord2(Window.Boundary, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
@@ -204,16 +234,20 @@ namespace OpenRGSS.Runtime.RGSS
                 GL.TexCoord2(0.8229166f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + 16 + this.cursor_rect.width - 2, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
             }
 
+            GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
             GL.End();
 
             if (this.contents == null) return;
 
             GL.BindTexture(TextureTarget.Texture2D, this.contents.TextureId);
             GL.Begin(PrimitiveType.Quads);
+            GL.Color4(1.0f, 1.0f, 1.0f, (this.opacity / 255.0f) * (this.contents_opacity / 255.0f));
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(this.x + 16, this.y + 16, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(this.x + 16, this.y + 16 + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(this.x + 16 + this.contents.rect.width, this.y + 16 + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(this.x + 16 + this.contents.rect.width, this.y + 16, this.viewport.GetDisplayZ(this.z));
+            GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
             GL.End();
         }
     }
