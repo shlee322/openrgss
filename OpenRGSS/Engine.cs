@@ -141,7 +141,7 @@ namespace OpenRGSS
             GL.Ortho(0.0, Engine.GetInstance().Width, Engine.GetInstance().Height, 0.0, 100000, -100000);
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             GL.ShadeModel(ShadingModel.Smooth);
         }
 

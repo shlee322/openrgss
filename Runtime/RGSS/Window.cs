@@ -114,16 +114,15 @@ namespace OpenRGSS.Runtime.RGSS
             if (!this.visible || this.disposedQM()) return;
 
             GL.BindTexture(TextureTarget.Texture2D, this.windowskin.TextureId);
-            GL.Begin(PrimitiveType.Quads);
 
-            //GL.Color4(255, 255, 255, this.opacity);
+            GL.Begin(PrimitiveType.Quads);
 
             //메인 틀
             GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(this.x + 2, this.y + 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(this.x + 2, this.y + this.height - 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(Window.Boundary, 1.0f); GL.Vertex3(this.x + this.width - 2, this.y + this.height - 2, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(Window.Boundary, 0.0f); GL.Vertex3(this.x + this.width - 2, this.y + 2, this.viewport.GetDisplayZ(this.z));
-            
+
             //좌측 상단 테두리
             GL.TexCoord2(Window.Boundary, 0.0f); GL.Vertex3(this.x, this.y, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(Window.Boundary, 0.125f); GL.Vertex3(this.x, this.y + 16, this.viewport.GetDisplayZ(this.z));
@@ -171,36 +170,39 @@ namespace OpenRGSS.Runtime.RGSS
             GL.TexCoord2(1.0f - Window.BorderBoundary, 0.5f); GL.Vertex3(this.x + this.width - 16, this.y + this.height, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(1.0f, 0.5f); GL.Vertex3(this.x + this.width, this.y + this.height, this.viewport.GetDisplayZ(this.z));
             GL.TexCoord2(1.0f, 0.375f); GL.Vertex3(this.x + this.width, this.y + this.height - 16, this.viewport.GetDisplayZ(this.z));
-            
-            //커서 상단
-            GL.TexCoord2(Window.Boundary, 0.5f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(1.0f - 0.167f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(1.0f - 0.167f, 0.5f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
 
-            //커서 좌측
-            GL.TexCoord2(Window.Boundary, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary + 0.010416f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + 2, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary + 0.010416f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + 2, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+            if (this.cursor_rect.width > 0 && this.cursor_rect.height > 0)
+            {
+                //커서 상단
+                GL.TexCoord2(Window.Boundary, 0.5f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(1.0f - 0.167f, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(1.0f - 0.167f, 0.5f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y, this.viewport.GetDisplayZ(this.z + 1));
 
-            //커서 우측
-            GL.TexCoord2(0.8229166f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(0.8229166f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(0.833f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(0.833f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                //커서 좌측
+                GL.TexCoord2(Window.Boundary, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary + 0.010416f, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + 2, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary + 0.010416f, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + 2, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
 
-            //커서 하단
-            GL.TexCoord2(Window.Boundary, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary, 0.75f); GL.Vertex3(this.x + this.cursor_rect.x, this.y + this.cursor_rect.y + this.cursor_rect.height, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(1.0f - 0.167f, 0.75f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y + this.cursor_rect.height, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(1.0f - 0.167f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-           
-            //커서 배경
-            GL.TexCoord2(Window.Boundary + 0.010416f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + 2, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(Window.Boundary + 0.010416f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + 2, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(0.8229166f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
-            GL.TexCoord2(0.8229166f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                //커서 우측
+                GL.TexCoord2(0.8229166f, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(0.8229166f, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width - 2, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(0.833f, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(0.833f, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+
+                //커서 하단
+                GL.TexCoord2(Window.Boundary, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary, 0.75f); GL.Vertex3(this.x + 16 + this.cursor_rect.x, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(1.0f - 0.167f, 0.75f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(1.0f - 0.167f, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + this.cursor_rect.width, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+
+                //커서 배경
+                GL.TexCoord2(Window.Boundary + 0.010416f, 0.515625f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + 2, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(Window.Boundary + 0.010416f, 0.734375f); GL.Vertex3(this.x + 16 + this.cursor_rect.x + 2, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(0.8229166f, 0.734375f); GL.Vertex3(this.x + this.cursor_rect.x + 16 + this.cursor_rect.width - 2, this.y + 16 + this.cursor_rect.y + this.cursor_rect.height - 2, this.viewport.GetDisplayZ(this.z + 1));
+                GL.TexCoord2(0.8229166f, 0.515625f); GL.Vertex3(this.x + this.cursor_rect.x + 16 + this.cursor_rect.width - 2, this.y + 16 + this.cursor_rect.y + 2, this.viewport.GetDisplayZ(this.z + 1));
+            }
 
             GL.End();
 
@@ -208,10 +210,10 @@ namespace OpenRGSS.Runtime.RGSS
 
             GL.BindTexture(TextureTarget.Texture2D, this.contents.TextureId);
             GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(this.x, this.y, this.viewport.GetDisplayZ(this.z));
-            GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(this.x, this.y + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
-            GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(this.x + this.contents.rect.width, this.y + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
-            GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(this.x + this.contents.rect.width, this.y, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(this.x + 16, this.y + 16, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(this.x + 16, this.y + 16 + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(this.x + 16 + this.contents.rect.width, this.y + 16 + this.contents.rect.height, this.viewport.GetDisplayZ(this.z));
+            GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(this.x + 16 + this.contents.rect.width, this.y + 16, this.viewport.GetDisplayZ(this.z));
             GL.End();
         }
     }

@@ -4,9 +4,9 @@ namespace OpenRGSS.Runtime.RGSS
 {
     public class Font
     {
-        public static string default_name = "MS PMincho";
+        public static string default_name = "Arial";
         public static float default_size = 22;
-        public static bool default_bold = true; 
+        public static bool default_bold = false; 
         public static bool default_italic = false;
         public static Color default_color = new Color(255, 255, 255, 255);
 
