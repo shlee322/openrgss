@@ -72,10 +72,12 @@ namespace OpenRGSS.Runtime.RGSS
                             if (dx < -32 || dx > Engine.GetInstance().Width) continue;
                             if (dx < -32 || dy > Engine.GetInstance().Height) continue;
 
-                            GL.TexCoord2(src_x, src_y); GL.Vertex3(dx, dy, this.viewport.GetDisplayZ(0));
-                            GL.TexCoord2(src_x, src_h); GL.Vertex3(dx, dy + 32, this.viewport.GetDisplayZ(0));
-                            GL.TexCoord2(src_w, src_h); GL.Vertex3(dx + 32, dy + 32, this.viewport.GetDisplayZ(0));
-                            GL.TexCoord2(src_w, src_y); GL.Vertex3(dx + 32, dy, this.viewport.GetDisplayZ(0));
+                            int dz = this.viewport.GetDisplayZ(this.priorities[tile_id] == 0 ? 0 : y + this.priorities[tile_id] * 32 + 32);
+
+                            GL.TexCoord2(src_x, src_y); GL.Vertex3(dx, dy, dz);
+                            GL.TexCoord2(src_x, src_h); GL.Vertex3(dx, dy + 32, dz);
+                            GL.TexCoord2(src_w, src_h); GL.Vertex3(dx + 32, dy + 32, dz);
+                            GL.TexCoord2(src_w, src_y); GL.Vertex3(dx + 32, dy, dz);
                         }
                     }
                 }

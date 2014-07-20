@@ -25,8 +25,32 @@ namespace OpenRGSS.Runtime.RGSS
 
         public Rect src_rect = new Rect(0, 0, 640, 480);
         public bool visible;
-        public int x;
-        public int y;
+        public int _x;
+        public virtual int x
+        {
+            get
+            {
+                return this._x;
+            }
+            set
+            {
+                this._x = value;
+            }
+        }
+
+        public int _y;
+        public virtual int y
+        {
+            get
+            {
+                return this._y;
+            }
+            set
+            {
+                this._y = value;
+            }
+        }
+
         public int z;
         public int ox;
         public int oy;
@@ -57,7 +81,7 @@ namespace OpenRGSS.Runtime.RGSS
             this.viewport.AddEntity(this);
         }
 
-        public void dispose()
+        public virtual void dispose()
         {
             if(this.bitmap != null) this.bitmap.dispose();
             this.viewport.RemoveEntity(this);
@@ -72,7 +96,7 @@ namespace OpenRGSS.Runtime.RGSS
         {
         }
 
-        public void update()
+        public virtual void update()
         {
             //System.Console.WriteLine("Sprite Update");
         }
