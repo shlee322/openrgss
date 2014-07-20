@@ -63,6 +63,8 @@ namespace OpenRGSS
             for script in obj
                 Engine.LoadScript(script[1], Zlib::Inflate.inflate(script[2]))
             end
+
+            Engine.Exit()
         ";
 
         public int Width
@@ -111,6 +113,11 @@ namespace OpenRGSS
         public void Run()
         {
             this.window.Run();
+        }
+
+        public void Exit()
+        {
+            this.window.Exit();
         }
 
         private void LoadWindow(object sender, System.EventArgs e)
@@ -202,6 +209,9 @@ namespace OpenRGSS
             }
 
             this.window.SwapBuffers();
+
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(0, 0, 0, 1);
         }
 
         public GameWindow GetWindow()

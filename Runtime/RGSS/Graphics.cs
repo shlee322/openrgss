@@ -18,8 +18,7 @@ namespace OpenRGSS.Runtime.RGSS
         
         public static void update()
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(0, 0 , 0, 1);
+            
 
             foreach(Viewport viewport in viewportList) {
                 viewport.draw();
