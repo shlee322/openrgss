@@ -14,7 +14,7 @@ namespace OpenRGSS.Runtime.RGSS
         }
         public Bitmap windowskin;
         public Bitmap contents = new Bitmap(32, 32);
-        public bool stretch;
+        public bool stretch = true;
         public Rect cursor_rect = new Rect(0, 0, 0, 0);
         public bool active = true;
         public bool visible = true;

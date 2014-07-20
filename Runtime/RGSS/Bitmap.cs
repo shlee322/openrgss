@@ -112,10 +112,12 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void blt(int x, int y, Bitmap src_bitmap, Rect src_rect, int opacity=0)
         {
+            System.Console.WriteLine("blt");
         }
 
         public void stretch_blt(Rect dest_rect, Bitmap src_bitmap, Rect src_rect, int opacity=0)
         {
+            System.Console.WriteLine("stretch_blt");
         }
 
         public void fill_rect(int x, int y, int width, int height, Color color)
@@ -136,6 +138,7 @@ namespace OpenRGSS.Runtime.RGSS
 
         public Bitmap clone()
         {
+            System.Console.WriteLine("clone");
             return null;
         }
 
@@ -159,10 +162,12 @@ namespace OpenRGSS.Runtime.RGSS
         public void set_pixel(int x, int y, Color color)
         {
             this.data.SetPixel(x, y, System.Drawing.Color.FromArgb((int)color.alpha, (int)color.red, (int)color.green, (int)color.blue));
+            this.GenTexture();
         }
 
         public void hue_change(int hug)
         {
+            System.Console.WriteLine("hue_change");
         }
 
         public void draw_text(int x, int y, int width, int height, string str, int align=0)
@@ -171,12 +176,12 @@ namespace OpenRGSS.Runtime.RGSS
             if (this.font.bold) style |= FontStyle.Bold;
             if (this.font.italic) style |= FontStyle.Italic;
 
-            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style);
+            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style, GraphicsUnit.Pixel);
 
             using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.InterpolationMode = InterpolationMode.High;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 g.DrawString(str, font, new SolidBrush(this.font.color.GetNative()), new RectangleF(x, y, width, height));
                 g.Flush();
@@ -195,12 +200,12 @@ namespace OpenRGSS.Runtime.RGSS
             FontStyle style = FontStyle.Regular;
             if (this.font.bold) style |= FontStyle.Bold;
             if (this.font.italic) style |= FontStyle.Italic;
-            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style);
+            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style, GraphicsUnit.Pixel);
 
             using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.InterpolationMode = InterpolationMode.High;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                 SizeF size = g.MeasureString(str, font);
