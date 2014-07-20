@@ -14,7 +14,22 @@
         public int oy;
         public double zoom_x;
         public double zoom_y;
-        public int opacity;
+        public int _opacity;
+        public int opacity
+        {
+            get
+            {
+                return this._opacity;
+            }
+
+            set
+            {
+                this._opacity = value;
+                if (this._opacity < 0) this._opacity = 0;
+                else if (this._opacity > 255) this._opacity = 255;
+            }
+        }
+
         public int blend_type;
         public Color color;
         public Tone tone;

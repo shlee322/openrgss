@@ -12,6 +12,7 @@ namespace OpenRGSS.Runtime.RGSS
         public Font font = new Font();
         private System.Drawing.Bitmap data;
         private int _textureId = -1;
+        private bool disposed = false;
 
         public int width
         {
@@ -101,11 +102,12 @@ namespace OpenRGSS.Runtime.RGSS
         {
             GL.DeleteTexture(this.TextureId);
             this.data.Dispose();
+            this.disposed = true;
         }
 
         public bool disposedQM()
         {
-            return false;
+            return this.disposed;
         }
 
         public void blt(int x, int y, Bitmap src_bitmap, Rect src_rect, int opacity=0)
@@ -118,10 +120,18 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void fill_rect(int x, int y, int width, int height, Color color)
         {
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
+            {
+                g.FillRectangle(new SolidBrush(color.GetNative()), x, y, width, height);
+                g.Flush();
+            }
+
+            this.GenTexture();
         }
 
         public void fill_rect(Rect rect, Color color)
         {
+            this.fill_rect(rect.x, rect.y, rect.width, rect.height, color);
         }
 
         public Bitmap clone()
@@ -131,15 +141,24 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void clear()
         {
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
+            {
+                g.Clear(System.Drawing.Color.Transparent);
+                g.Flush();
+            }
+
+            this.GenTexture();
         }
 
         public Color get_pixel(int x, int y)
         {
-            return null;
+            System.Drawing.Color color = this.data.GetPixel(x, y);
+            return new Color(color.R, color.G, color.B, color.A);
         }
 
         public void set_pixel(int x, int y, Color color)
         {
+            this.data.SetPixel(x, y, System.Drawing.Color.FromArgb((int)color.alpha, (int)color.red, (int)color.green, (int)color.blue));
         }
 
         public void hue_change(int hug)

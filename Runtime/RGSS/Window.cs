@@ -26,9 +26,55 @@ namespace OpenRGSS.Runtime.RGSS
         public int height;
         public int ox = 0;
         public int oy = 0;
-        public int opacity = 255;
-        public int back_opacity = 200;
-        public int contents_opacity = 255;
+        public int _opacity = 255;
+        public int opacity
+        {
+            get
+            {
+                return this._opacity;
+            }
+
+            set
+            {
+                this._opacity = value;
+                if (this._opacity < 0) this._opacity = 0;
+                else if (this._opacity > 255) this._opacity = 255;
+            }
+        }
+
+        public int _back_opacity = 200;
+        public int back_opacity
+        {
+            get
+            {
+                return this._back_opacity;
+            }
+
+            set
+            {
+                this._back_opacity = value;
+                if (this._back_opacity < 0) this._back_opacity = 0;
+                else if (this._back_opacity > 255) this._back_opacity = 255;
+            }
+        }
+
+        public int _contents_opacity = 255;
+        public int contents_opacity
+        {
+            get
+            {
+                return this._contents_opacity;
+            }
+
+            set
+            {
+                this._contents_opacity = value;
+                if (this._contents_opacity < 0) this._contents_opacity = 0;
+                else if (this._contents_opacity > 255) this._contents_opacity = 255;
+            }
+        }
+
+        private bool disposed;
         
         public Window() : this(null)
         {
@@ -51,11 +97,12 @@ namespace OpenRGSS.Runtime.RGSS
             this.windowskin.dispose();
             this.contents.dispose();
             this.viewport.RemoveEntity(this);
+            this.disposed = true;
         }
 
         public bool disposedQM()
         {
-            return false;
+            return this.disposed;
         }
 
         public void update()
