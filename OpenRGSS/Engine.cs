@@ -8,6 +8,7 @@ using OpenTK.Graphics;
 using System.Collections.Generic;
 using Microsoft.Scripting;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
 
 namespace OpenRGSS
 {
@@ -20,6 +21,8 @@ namespace OpenRGSS
         private ScriptEngine rubyEngine;
 
         private IntroScene introScene;
+
+        private bool _debug;
 
         private const string RGSSRuntimeSource = @"
             require 'OpenRGSS.Runtime.RGSS'
@@ -83,6 +86,24 @@ namespace OpenRGSS
             }
         }
 
+        public bool Debug
+        {
+            get
+            {
+                return this._debug;
+            }
+
+            set
+            {
+                this._debug = value;
+
+                if (this.rubyEngine != null)
+                {
+                    this.rubyEngine.Runtime.Globals.SetVariable("DEBUG", this.Debug);
+                }
+            }
+        }
+
         public Engine()
         {
             this.SetInstance();
@@ -122,8 +143,6 @@ namespace OpenRGSS
 
         private void LoadWindow(object sender, System.EventArgs e)
         {
-            this.introScene.Log("Init Engine...");
-
             this.window.Context.MakeCurrent(null);
             this.gameThread.Start();
         }
@@ -132,6 +151,8 @@ namespace OpenRGSS
         {
             this.window.MakeCurrent();
             this.InitEngine();
+            this.introScene.Init();
+            this.introScene.Log("Init Engine...");
             this.InitScriptEngine();
             this.InitScripts();
         }
@@ -153,6 +174,7 @@ namespace OpenRGSS
             this.rubyEngine = runtime.GetEngine("rb");
 
             this.rubyEngine.Runtime.Globals.SetVariable("Engine", this);
+            this.rubyEngine.Runtime.Globals.SetVariable("DEBUG", this.Debug);
         }
 
         protected void InitScripts()
@@ -173,22 +195,66 @@ namespace OpenRGSS
             }
             catch (Exception e)
             {
-                foreach (DictionaryEntry data in e.Data)
-                {
-                    if (data.Value is IronRuby.Runtime.RubyExceptionData)
-                    {
-                        IronRuby.Runtime.RubyExceptionData exData = (IronRuby.Runtime.RubyExceptionData)data.Value;
+                ShowError(e);
+            }
+        }
 
-                        System.Console.WriteLine(exData.Message.ToString());
-                        foreach (var ex in exData.Backtrace)
-                        {
-                            System.Console.WriteLine(ex.ToString());
-                        }
+        private void ShowError(Exception e)
+        {
+            foreach (DictionaryEntry data in e.Data)
+            {
+                if (data.Value is IronRuby.Runtime.RubyExceptionData)
+                {
+                    IronRuby.Runtime.RubyExceptionData exData = (IronRuby.Runtime.RubyExceptionData)data.Value;
+
+                    OpenRGSS.Log.Debug(exData.Message.ToString());
+                    foreach (var ex in exData.Backtrace)
+                    {
+                        OpenRGSS.Log.Debug(ex.ToString());
                     }
                 }
+            }
 
-                System.Console.WriteLine("=======================");
-                System.Console.Write(e.ToString());
+            OpenRGSS.Log.Debug("=======================");
+            OpenRGSS.Log.Debug(e.ToString());
+
+            int errorTexture = -1;
+            using (Bitmap buffer = OpenRGSS.Properties.Resources.OPENRGSS_ERROR)
+            {
+                errorTexture = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, errorTexture);
+
+                System.Drawing.Imaging.BitmapData data = buffer.LockBits(new Rectangle(0, 0, buffer.Width, buffer.Height),
+                    System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
+                            OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+
+                buffer.UnlockBits(data);
+
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Nearest);
+            }
+
+            while(true)
+            {
+                GL.Viewport(0, 0, Engine.GetInstance().Width, Engine.GetInstance().Height);
+
+                GL.ClearColor(0, 0, 0, 1);
+
+                GL.BindTexture(TextureTarget.Texture2D, errorTexture);
+                GL.Begin(PrimitiveType.Quads);
+
+                GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
+                GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(0, 0);
+                GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(0, 480);
+                GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(640, 480);
+                GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(640, 0);
+
+                GL.End();
+
+                SwapBuffers();
             }
         }
 
@@ -198,6 +264,11 @@ namespace OpenRGSS
 
         public void SwapBuffers()
         {
+            if (this.window.IsExiting)
+            {
+                Thread.CurrentThread.Abort();
+            }
+
             count++;
             if (System.DateTime.Now.Ticks > tick)
             {

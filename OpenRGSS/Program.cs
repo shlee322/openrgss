@@ -11,6 +11,7 @@ namespace OpenRGSS
         static void Main(string[] args)
         {
             Engine engine = new Engine();
+            engine.Debug = args.Length > 0 && args[0] == "debug" ? true : false;
             engine.Run();
         }
     }

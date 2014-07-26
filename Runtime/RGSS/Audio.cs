@@ -2,6 +2,8 @@
 {
     public class Audio
     {
+        private static string[] AudioExtension = new string[] { ".mid", ".ogg", ".mp3" };
+
         public static void bgm_play(string filename, int volume=100, int pitch=100)
         {
         }
@@ -44,6 +46,17 @@
 
         public static void se_fade(int time)
         {
+        }
+
+        private static string FindFile(string filename)
+        {
+            foreach (string ext in AudioExtension)
+            {
+                if (System.IO.File.Exists(filename + ext))
+                    return filename + ext;
+            }
+
+            return filename;
         }
     }
 }

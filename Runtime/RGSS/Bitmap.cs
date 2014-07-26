@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace OpenRGSS.Runtime.RGSS
 {
@@ -112,12 +113,12 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void blt(int x, int y, Bitmap src_bitmap, Rect src_rect, int opacity=0)
         {
-            System.Console.WriteLine("blt");
+            OpenRGSS.Log.Debug("blt");
         }
 
         public void stretch_blt(Rect dest_rect, Bitmap src_bitmap, Rect src_rect, int opacity=0)
         {
-            System.Console.WriteLine("stretch_blt");
+            OpenRGSS.Log.Debug("stretch_blt");
         }
 
         public void fill_rect(int x, int y, int width, int height, Color color)
@@ -138,7 +139,7 @@ namespace OpenRGSS.Runtime.RGSS
 
         public Bitmap clone()
         {
-            System.Console.WriteLine("clone");
+            OpenRGSS.Log.Debug("clone");
             return null;
         }
 
@@ -167,23 +168,19 @@ namespace OpenRGSS.Runtime.RGSS
 
         public void hue_change(int hug)
         {
-            System.Console.WriteLine("hue_change");
+            OpenRGSS.Log.Debug("hue_change");
         }
 
         public void draw_text(int x, int y, int width, int height, string str, int align=0)
         {
-            FontStyle style = FontStyle.Regular;
-            if (this.font.bold) style |= FontStyle.Bold;
-            if (this.font.italic) style |= FontStyle.Italic;
-
-            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style, GraphicsUnit.Pixel);
-
             using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
             {
+                g.CompositingMode = CompositingMode.SourceCopy;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.High;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                g.DrawString(str, font, new SolidBrush(this.font.color.GetNative()), new RectangleF(x, y, width, height));
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                StringFormat format = StringFormat.GenericDefault;
+                format.FormatFlags |= StringFormatFlags.FitBlackBox;
+                g.DrawString(str, this.font.GetNative(), new SolidBrush(this.font.color.GetNative()), new RectangleF(x, y, width, height), format);
                 g.Flush();
             }
 
@@ -197,18 +194,9 @@ namespace OpenRGSS.Runtime.RGSS
 
         public Rect text_size(string str)
         {
-            FontStyle style = FontStyle.Regular;
-            if (this.font.bold) style |= FontStyle.Bold;
-            if (this.font.italic) style |= FontStyle.Italic;
-            System.Drawing.Font font = new System.Drawing.Font(this.font.name, this.font.size, style, GraphicsUnit.Pixel);
-
             using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(this.data))
             {
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.High;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                SizeF size = g.MeasureString(str, font);
+                SizeF size = g.MeasureString(str, this.font.GetNative());
                 return new Rect(0, 0, (int)size.Width, (int)size.Height);
             }
         }

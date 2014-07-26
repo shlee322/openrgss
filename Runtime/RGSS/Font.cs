@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace OpenRGSS.Runtime.RGSS
 {
@@ -36,6 +37,15 @@ namespace OpenRGSS.Runtime.RGSS
         public bool existQM()
         {
             return true;
+        }
+
+        public System.Drawing.Font GetNative()
+        {
+            FontStyle style = FontStyle.Regular;
+            if (this.bold) style |= FontStyle.Bold;
+            if (this.italic) style |= FontStyle.Italic;
+
+            return new System.Drawing.Font(this.name, this.size, style, GraphicsUnit.Pixel);
         }
     }
 }

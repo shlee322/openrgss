@@ -4,7 +4,10 @@
     {
         public static void Debug(string log)
         {
-            System.Console.WriteLine(log);
+            if (Engine.GetInstance().Debug)
+            {
+                LogForm.GetInstance().Debug(log);
+            }
         }
     }
 }
